@@ -16,8 +16,8 @@ Avant de donner une définition plus formelle des concepts décrits ci-dessus, c
 Développement
 
   • Outils
-
-    Java
+  
+  Java
     
 Le langage Java est un langage de programmation informatique orienté objet créé par James Gosling et Patrick Naughton, employés de Sun Microsystems, avec le soutien de Bill Joy (cofondateur de Sun Microsystems en 1982), présenté officiellement le 23 mai 1995 au SunWorld.
 La société Sun a été ensuite rachetée en 2009 par la société Oracle qui détient et maintient désormais Java.
