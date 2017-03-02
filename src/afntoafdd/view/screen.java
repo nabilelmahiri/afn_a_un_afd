@@ -7,7 +7,12 @@
  * screen.java
  *
  * Created on 01/11/2010, 11:21:03 AM
- * autores: EL Mahiri Nabil
+
+Réalisé par : 
+•	EL Mahiri Nabil
+•	Hicham Mamouni Alaoui
+Encadré par :
+•	Mr. BADDI YOUSSEF
  */
 package afntoafdd.view;
 

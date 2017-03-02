@@ -1,6 +1,10 @@
 /**
  *
- * @author EL Mahiri Nabil
+ * Réalisé par : 
+•	EL Mahiri Nabil
+•	Hicham Mamouni Alaoui
+Encadré par :
+•	Mr. BADDI YOUSSEF
  */
 
 package nfdtoafd.module;
