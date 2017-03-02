@@ -10,31 +10,32 @@ import java.util.*;
 
 public class Automaton {
 
+
     private String Nombre;
-    private int numEstados;
-    private int EstadoInicial;
-    private int EstadoActual;
-    private TreeSet<String> Alfabeto;
-    private TreeSet<Integer> estadoFinal;
-    private TreeSet<Integer>[][] TablaTransiciones;
+    private int Etatsnum;
+    private int EtatInitial;
+    private int EtatActuel;
+    private TreeSet<String> Alphabet;
+    private TreeSet<Integer> etatFinal;
+    private TreeSet<Integer>[][] TableTransitions;
 
     public Automaton() {
         super();
-        Alfabeto = new TreeSet<String>();
-        estadoFinal = new TreeSet<Integer>();
+        Alphabet = new TreeSet<String>();
+        etatFinal = new TreeSet<Integer>();
 
 
     }
 
-    public Automaton(String nombre, int nEstados, TreeSet<String> alfabeto, int q0,
-            TreeSet<Integer> qend, TreeSet<Integer>[][] tablaTransiciones) {
+    public Automaton(String nombre, int nEtats, TreeSet<String> alphabet, int q0,
+            TreeSet<Integer> qend, TreeSet<Integer>[][] tableTransitions) {
         super();
         Nombre = nombre;
-        this.numEstados = nEstados;
-        Alfabeto = alfabeto;
-        this.EstadoInicial = q0;
-        estadoFinal = qend;
-        TablaTransiciones = tablaTransiciones;
+        this.Etatsnum = nEtats;
+        Alphabet = alphabet;
+        this.EtatInitial = q0;
+        etatFinal = qend;
+        TableTransitions = tableTransitions;
     }
 
     public String getNombre() {
@@ -45,89 +46,89 @@ public class Automaton {
         Nombre = nombre;
     }
 
-    public int getnumEstados() {
-        return numEstados;
+    public int getEtatsnum() {
+        return Etatsnum;
     }
 
-    public void setnumEstados(int nEstados) {
-        this.numEstados = nEstados;
+    public void setEtatsnum(int nEtats) {
+        this.Etatsnum = nEtats;
     }
 
-    public TreeSet<String> getAlfabeto() {
-        return Alfabeto;
+    public TreeSet<String> getAlphabet() {
+        return Alphabet;
     }
 
-    public void setAlfabeto(TreeSet<String> alfabeto) {
-        Alfabeto = alfabeto;
+    public void setAlphabet(TreeSet<String> alphabet) {
+        Alphabet = alphabet;
     }
 
-    public int getEstadoInicial() {
-        return EstadoInicial;
+    public int getEtatInitial() {
+        return EtatInitial;
     }
 
-    public void setEstadoInicial(int q0) {
-        this.EstadoInicial = q0;
+    public void setEtatInitial(int q0) {
+        this.EtatInitial = q0;
     }
 
-    public TreeSet<Integer> getestadoFinal() {
-        return estadoFinal;
+    public TreeSet<Integer> getetatFinal() {
+        return etatFinal;
     }
 
-    public void setestadoFinal(TreeSet<Integer> qend) {
-        estadoFinal = qend;
+    public void setetatFinal(TreeSet<Integer> qend) {
+        etatFinal = qend;
     }
 
-    public TreeSet<Integer>[][] getTablaTransiciones() {
-        return TablaTransiciones;
+    public TreeSet<Integer>[][] getTableTransitions() {
+        return TableTransitions;
     }
 
-    public void setTablaTransiciones(TreeSet<Integer>[][] tablaTransiciones) {
-        TablaTransiciones = tablaTransiciones;
+    public void setTableTransitions(TreeSet<Integer>[][] tableTransitions) {
+        TableTransitions = tableTransitions;
     }
 
-    public void addEstadoFinal(int q) {
-        estadoFinal.add(q);
+    public void addEtatFinal(int q) {
+        etatFinal.add(q);
     }
 
-    public int getEstadoActual() {
-        return EstadoActual;
+    public int getEtatActuel() {
+        return EtatActuel;
     }
 
     @SuppressWarnings("unchecked")
-    public void addLetraAlfabeto(String letra) {
-        Alfabeto.add(letra);
-        TablaTransiciones = new TreeSet[numEstados][Alfabeto.size()];
-        iniciarTablaTransiciones();
+    public void addLettreAlphabet(String letra) {
+        Alphabet.add(letra);
+        TableTransitions = new TreeSet[Etatsnum][Alphabet.size()];
+        iniciarTableTransitions();
     }
 
-    private void iniciarTablaTransiciones() {
-        for (int x = 0; x < numEstados; x++) {
-            for (int y = 0; y < Alfabeto.size(); y++) {
-                TablaTransiciones[x][y] = new TreeSet<Integer>();
+    private void iniciarTableTransitions() {
+        for (int x = 0; x < Etatsnum; x++) {
+            for (int y = 0; y < Alphabet.size(); y++) {
+                TableTransitions[x][y] = new TreeSet<Integer>();
             }
         }
     }
 
     public void addTransicion(int q0, String e, int q1) {
         Vector<String> a = new Vector<String>();
-        a.addAll(Alfabeto);
-        TablaTransiciones[q0][a.indexOf(e)].add(q1);
+        a.addAll(Alphabet);
+        TableTransitions[q0][a.indexOf(e)].add(q1);
     }
 
     public boolean analizarPalabra(String palabra) {
 
-        EstadoActual = EstadoInicial;
+        EtatActuel = EtatInitial;
         String[] letras = palabra.split("");
 
         for (String l : letras) {
             if (!l.equals("")) {
-                EstadoActual = funcion(EstadoActual, l);
-                if (EstadoActual == -1) {
+                EtatActuel = funcion(EtatActuel, l);
+                if (EtatActuel == -1) {
                     return false;
                 }
             }
         }
-        if (estadoFinal.contains(EstadoActual)) {
+        if (etatFinal.contains(EtatActuel)) {
             return true;
         }
 
@@ -136,11 +137,11 @@ public class Automaton {
 
     private int funcion(int estadoActual, String e) {
         Vector<String> a = new Vector<String>();
-        a.addAll(Alfabeto);
-        if (TablaTransiciones[estadoActual][a.indexOf(e)].isEmpty()) {
+        a.addAll(Alphabet);
+        if (TableTransitions[estadoActual][a.indexOf(e)].isEmpty()) {
             return -1;
         } else {
-            return TablaTransiciones[estadoActual][a.indexOf(e)].first();
+            return TableTransitions[estadoActual][a.indexOf(e)].first();
         }
 
     }

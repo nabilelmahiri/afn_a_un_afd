@@ -15,25 +15,25 @@ import javax.swing.JOptionPane;
 public class Transformer {
 
     private String nombre;
-    private int numestados;
-    private int estadoInicial;
-    private TreeSet<String> alfabeto;
-    private TreeSet<Integer> estadoFinal;
+    private int etatsnum;
+    private int etatinitial;
+    private TreeSet<String> alphabet;
+    private TreeSet<Integer> etatfinal;
     private TreeSet<Integer>[][] tabtrans;
 
-    public Automaton minimizar(Automaton automata) {
+    public Automaton minimiser(Automaton automaton) {
 
-        nombre = automata.getNombre();
-        numestados = automata.getnumEstados();
-        alfabeto = automata.getAlfabeto();
-        estadoInicial = automata.getEstadoInicial();
-        estadoFinal = automata.getestadoFinal();
-        tabtrans = automata.getTablaTransiciones();
+        nombre = automaton.getNombre();
+        etatsnum = automaton.getEtatsnum();
+        alphabet = automaton.getAlphabet();
+        etatinitial = automaton.getEtatInitial();
+        etatfinal = automaton.getetatFinal();
+        tabtrans = automaton.getTableTransitions();
 
-        if (alfabeto.contains("E")) {
+        if (alphabet.contains("E")) {
             JOptionPane.showMessageDialog(null, "Retrait des transitions vides");
 
-            quitarTansicionesVacias();
+            supprimerTransitionsvides();
             JOptionPane.showMessageDialog(null, "les transitions vides sont supprimées");
 
         } else {
@@ -41,10 +41,10 @@ public class Transformer {
 
 
         }
-        if (noEsDeterminista()) {
+        if (nonDeterminist()) {
             JOptionPane.showMessageDialog(null, "la suppression d'indéterminisme");
 
-            quitarIndeterminismo();
+            supprimerindeterminisme();
             JOptionPane.showMessageDialog(null, "indéterminisme enlevé");
 
         } else {
@@ -52,16 +52,16 @@ public class Transformer {
 
         }
 
-        while (!verificarMinimo()) {
-            minimizar();
+        while (!verificationMinimale()) {
+            minimiser();
         }
         JOptionPane.showMessageDialog(null, "Elle est minime");
 
-        return new Automaton(nombre, numestados, alfabeto, estadoInicial, estadoFinal, tabtrans);
+        return new Automaton(nombre, etatsnum, alphabet, etatinitial, etatfinal, tabtrans);
 
     }
 
-    private void quitarIndeterminismo() {
+    private void supprimerindeterminisme() {
 
         Vector<TreeSet> nuevosEstados = new Vector<TreeSet>();
         TreeSet<Integer> ts;
@@ -71,9 +71,9 @@ public class Transformer {
         c.add(0);
         nuevosEstados.add(c);
 
-        for (String s : alfabeto) {
-            for (int cont = 0; cont < numestados; cont++) {
-                ts = obtenerTransicion(cont, s);
+        for (String s : alphabet) {
+            for (int cont = 0; cont < etatsnum; cont++) {
+                ts = obtenirTransition(cont, s);
                 if (ts.size() != 0 && !nuevosEstados.contains(ts)) {
                     nuevosEstados.add(ts);
                 }
@@ -83,9 +83,9 @@ public class Transformer {
 
         for (TreeSet<Integer> t : temporal) {
             ts2 = new TreeSet<Integer>();
-            for (String s : alfabeto) {
+            for (String s : alphabet) {
                 for (Integer i : t) {
-                    ts2.addAll(obtenerTransicion(i, s));
+                    ts2.addAll(obtenirTransition(i, s));
                 }
                 if (ts2.size() != 0 && !nuevosEstados.contains(ts2)) {
                     nuevosEstados.add(ts2);
@@ -93,16 +93,16 @@ public class Transformer {
             }
         }
 
-        TreeSet<Integer>[][] tablaaux = new TreeSet[nuevosEstados.size()][alfabeto.size()];
+        TreeSet<Integer>[][] tablaaux = new TreeSet[nuevosEstados.size()][alphabet.size()];
 
 
         TreeSet<Integer> tranO, tran;
-        for (String s : alfabeto) {
+        for (String s : alphabet) {
             for (TreeSet<Integer> t : nuevosEstados) {
                 tranO = new TreeSet<Integer>();
                 tran = new TreeSet<Integer>();
                 for (Integer i : t) {
-                    tranO.addAll(obtenerTransicion(i, s));
+                    tranO.addAll(obtenirTransition(i, s));
                 }
 
                 ///-nuevo
@@ -111,7 +111,7 @@ public class Transformer {
                 }
 
                 Vector<String> a = new Vector<String>();
-                a.addAll(alfabeto);
+                a.addAll(alphabet);
                 tablaaux[nuevosEstados.indexOf(t)][a.indexOf(s)] = tran;
             }
         }
@@ -119,25 +119,25 @@ public class Transformer {
         TreeSet<Integer> finales = new TreeSet<Integer>();
 
         for (TreeSet<Integer> t : nuevosEstados) {
-            for (Integer i : estadoFinal) {
+            for (Integer i : etatfinal) {
                 if (t.contains(i)) {
                     finales.add(nuevosEstados.indexOf(t));
                 }
             }
         }
 
-        numestados = nuevosEstados.size();
-        estadoFinal = finales;
+        etatsnum = nuevosEstados.size();
+        etatfinal = finales;
         tabtrans = tablaaux;
         System.out.println();
     }
 
-    private boolean noEsDeterminista() {
+    private boolean nonDeterminist() {
         boolean b = false;
         TreeSet<Integer> ts = new TreeSet<Integer>();
-        for (String s : alfabeto) {
-            for (int cont = 0; cont < numestados; cont++) {
-                ts = obtenerTransicion(cont, s);
+        for (String s : alphabet) {
+            for (int cont = 0; cont < etatsnum; cont++) {
+                ts = obtenirTransition(cont, s);
                 if (ts != null && ts.size() > 1) {
                     b = true;
                 }
@@ -146,57 +146,57 @@ public class Transformer {
         return b;
     }
 
-    private void quitarTansicionesVacias() {
+    private void supprimerTransitionsvides() {
         TreeSet<Integer> tran;
         TreeSet<Integer> clau;
         TreeSet<Integer> clau2;
 
-        TreeSet<String> alfabetoTemp = (TreeSet<String>) alfabeto.clone();
-        alfabetoTemp.remove("E");
-        TreeSet<Integer>[][] tablatransicionesTemp = new TreeSet[numestados][alfabetoTemp.size()];
+        TreeSet<String> alphabetTemp = (TreeSet<String>) alphabet.clone();
+        alphabetTemp.remove("E");
+        TreeSet<Integer>[][] tablatransicionesTemp = new TreeSet[etatsnum][alphabetTemp.size()];
 
-        for (int a = 0; a < alfabetoTemp.size(); a++) {
-            for (int q = 0; q < numestados; q++) {
+        for (int a = 0; a < alphabetTemp.size(); a++) {
+            for (int q = 0; q < etatsnum; q++) {
                 tablatransicionesTemp[q][a] = new TreeSet<Integer>();
             }
 
         }
 
-        for (String s : alfabeto) {
+        for (String s : alphabet) {
             if (!s.equals("E")) {
-                for (int cont = 0; cont < numestados; cont++) {
+                for (int cont = 0; cont < etatsnum; cont++) {
                     //System.out.print(cont + " "+s+" -");
 
                     tran = new TreeSet<Integer>();
                     clau = cerrarVacias(cont);
                     clau2 = new TreeSet<Integer>();
                     for (Integer i : clau) {
-                        tran.addAll(obtenerTransicion(i.intValue(), s));
+                        tran.addAll(obtenirTransition(i.intValue(), s));
                     }
                     for (Integer i : tran) {
                         clau2.addAll(cerrarVacias(i.intValue()));
 
                         Vector<String> a = new Vector<String>();
-                        a.addAll(alfabetoTemp);
+                        a.addAll(alphabetTemp);
                         tablatransicionesTemp[cont][a.indexOf(s)].addAll(clau2);
                     }
                 }
             }
         }
 
-        TreeSet<Integer> f = cerrarVacias(estadoInicial);
+        TreeSet<Integer> f = cerrarVacias(etatinitial);
         boolean cq0F = false;
 
-        for (Integer i : estadoFinal) {
+        for (Integer i : etatfinal) {
             if (f.contains(i)) {
                 cq0F = true;
             }
         }
 
         if (cq0F) {
-            estadoFinal.add(estadoInicial);
+            etatfinal.add(etatinitial);
         }
-        alfabeto = alfabetoTemp;
+        alphabet = alphabetTemp;
         tabtrans = tablatransicionesTemp;
 
         System.out.println();
@@ -206,7 +206,7 @@ public class Transformer {
         TreeSet<Integer> cierre = new TreeSet<Integer>();
         TreeSet<Integer> ts = new TreeSet<Integer>();
         Stack<TreeSet<Integer>> pila = new Stack<TreeSet<Integer>>();
-        pila.push(obtenerTransicion(q, "E"));
+        pila.push(obtenirTransition(q, "E"));
         cierre.add(q);
 
         while (!pila.isEmpty()) {
@@ -214,7 +214,7 @@ public class Transformer {
 
             for (Integer i : ts) {
                 if (!cierre.contains(i.intValue())) {
-                    pila.push(obtenerTransicion(i.intValue(), "E"));
+                    pila.push(obtenirTransition(i.intValue(), "E"));
                 }
             }
             cierre.addAll(ts);
@@ -222,58 +222,58 @@ public class Transformer {
         return cierre;
     }
 
-    private TreeSet<Integer> obtenerTransicion(int q0, String e) {
+    private TreeSet<Integer> obtenirTransition(int q0, String e) {
         Vector<String> a = new Vector<String>();
-        a.addAll(alfabeto);
+        a.addAll(alphabet);
         return tabtrans[q0][a.indexOf(e)];
     }
 
-    private boolean verificarMinimo() {
+    private boolean verificationMinimale() {
         boolean f = true;
 
-        int[][] estados = new int[numestados][numestados];
+        int[][] etat = new int[etatsnum][etatsnum];
         TreeSet<Integer> r;
         TreeSet<Integer> t;
         int y;
         int x;
-        int tamaño = 0;
-        for (int cont = 1; cont < numestados; cont++) {
+        int taille = 0;
+        for (int cont = 1; cont < etatsnum; cont++) {
             for (int cont2 = 0; cont2 < cont; cont2++) {
-                if ((estadoFinal.contains(cont) && !estadoFinal.contains(cont2)) || (estadoFinal.contains(cont2) && !estadoFinal.contains(cont))) {
-                    estados[cont][cont2] = 1;
+                if ((etatfinal.contains(cont) && !etatfinal.contains(cont2)) || (etatfinal.contains(cont2) && !etatfinal.contains(cont))) {
+                    etat[cont][cont2] = 1;
                 }
-                tamaño = 0;
-                for (String s : alfabeto) {
-                    r = obtenerTransicion(cont, s);
-                    t = obtenerTransicion(cont2, s);
+                taille = 0;
+                for (String s : alphabet) {
+                    r = obtenirTransition(cont, s);
+                    t = obtenirTransition(cont2, s);
                     if (r.size() > 0 && t.size() > 0) {
-                        tamaño++;
+                        taille++;
                         y = r.first().intValue();
                         x = t.first().intValue();
 
                         if (x < y) {
-                            if (estados[y][x] == 1) {
-                                estados[cont][cont2] = 1;
+                            if (etat[y][x] == 1) {
+                                etat[cont][cont2] = 1;
                             }
                         } else {
-                            if (estados[x][y] == 1) {
-                                estados[cont][cont2] = 1;
+                            if (etat[x][y] == 1) {
+                                etat[cont][cont2] = 1;
                             }
                         }
                         if (y != x) {
-                            estados[cont][cont2] = 1;
+                            etat[cont][cont2] = 1;
                         }
                     }
                 }
-                if (tamaño != alfabeto.size()) {
-                    estados[cont][cont2] = 1;
+                if (taille != alphabet.size()) {
+                    etat[cont][cont2] = 1;
                 }
             }
         }
 
-        for (int cont = 1; cont < numestados; cont++) {
+        for (int cont = 1; cont < etatsnum; cont++) {
             for (int cont2 = 0; cont2 < cont; cont2++) {
-                if (estados[cont][cont2] == 0) {
+                if (etat[cont][cont2] == 0) {
                     f = false;
                 }
             }
@@ -283,44 +283,44 @@ public class Transformer {
 
     }
 
-    private void minimizar() {
+    private void minimiser() {
 
-        int[][] estados = new int[numestados][numestados];
+        int[][] etat = new int[etatsnum][etatsnum];
         TreeSet<Integer> r;
         TreeSet<Integer> t;
         int x;
         int y;
-        int tamaño = 0;
-        for (int cont = 1; cont < numestados; cont++) {
+        int taille = 0;
+        for (int cont = 1; cont < etatsnum; cont++) {
             for (int cont2 = 0; cont2 < cont; cont2++) {
-                if ((estadoFinal.contains(cont) && !estadoFinal.contains(cont2)) || (estadoFinal.contains(cont2) && !estadoFinal.contains(cont))) {
-                    estados[cont][cont2] = 1;
+                if ((etatfinal.contains(cont) && !etatfinal.contains(cont2)) || (etatfinal.contains(cont2) && !etatfinal.contains(cont))) {
+                    etat[cont][cont2] = 1;
                 }
-                tamaño = 0;
-                for (String s : alfabeto) {
-                    r = obtenerTransicion(cont, s);
-                    t = obtenerTransicion(cont2, s);
+                taille = 0;
+                for (String s : alphabet) {
+                    r = obtenirTransition(cont, s);
+                    t = obtenirTransition(cont2, s);
                     if (r.size() > 0 && t.size() > 0) {
-                        tamaño++;
+                        taille++;
                         x = r.first().intValue();
                         y = t.first().intValue();
 
                         if (y < x) {
-                            if (estados[x][y] == 1) {
-                                estados[cont][cont2] = 1;
+                            if (etat[x][y] == 1) {
+                                etat[cont][cont2] = 1;
                             }
                         } else {
-                            if (estados[y][x] == 1) {
-                                estados[cont][cont2] = 1;
+                            if (etat[y][x] == 1) {
+                                etat[cont][cont2] = 1;
                             }
                         }
                         if (x != y) {
-                            estados[cont][cont2] = 1;
+                            etat[cont][cont2] = 1;
                         }
                     }
                 }
-                if (tamaño != alfabeto.size()) {
-                    estados[cont][cont2] = 1;
+                if (taille != alphabet.size()) {
+                    etat[cont][cont2] = 1;
                 }
             }
         }
@@ -328,9 +328,9 @@ public class Transformer {
         TreeSet<Integer> ts;
         boolean f;
 
-        for (int cont = 1; cont < numestados; cont++) {
+        for (int cont = 1; cont < etatsnum; cont++) {
             for (int cont2 = 0; cont2 < cont; cont2++) {
-                if (estados[cont][cont2] == 0) {
+                if (etat[cont][cont2] == 0) {
                     ts = new TreeSet<Integer>();
                     f = true;
 
@@ -352,7 +352,7 @@ public class Transformer {
 
         f = true;
 
-        for (int cont = 0; cont < numestados; cont++) {
+        for (int cont = 0; cont < etatsnum; cont++) {
             f = true;
             for (TreeSet<Integer> tsmod : vector) {
                 if (tsmod.contains(cont)) {
@@ -366,16 +366,16 @@ public class Transformer {
             }
         }
 
-        TreeSet<Integer>[][] tablaTemp = new TreeSet[vector.size()][alfabeto.size()];
+        TreeSet<Integer>[][] tablaTemp = new TreeSet[vector.size()][alphabet.size()];
 
         TreeSet<Integer> tran;
         int t0;
         TreeSet<Integer> t1;
-        for (String s : alfabeto) {
+        for (String s : alphabet) {
             for (TreeSet<Integer> tsi : vector) {
                 tran = new TreeSet<Integer>();
                 for (Integer i : tsi) {
-                    tran.addAll(obtenerTransicion(i, s));
+                    tran.addAll(obtenirTransition(i, s));
                 }
 
                 t0 = vector.indexOf(tsi);
@@ -387,30 +387,30 @@ public class Transformer {
                 }
 
                 Vector<String> a = new Vector<String>();
-                a.addAll(alfabeto);
+                a.addAll(alphabet);
                 tablaTemp[t0][a.indexOf(s)] = t1;
 
             }
         }
 
         TreeSet<Integer> finales = new TreeSet<Integer>();
-        int q00 = estadoInicial;
+        int q00 = etatinitial;
 
         for (TreeSet<Integer> i : vector) {
-            if (i.contains(estadoInicial)) {
+            if (i.contains(etatinitial)) {
                 q00 = vector.indexOf(i);
             }
 
-            for (Integer ii : estadoFinal) {
+            for (Integer ii : etatfinal) {
                 if (i.contains(ii)) {
                     finales.add(vector.indexOf(i));
                 }
             }
         }
 
-        estadoInicial = q00;
-        numestados = vector.size();
-        estadoFinal = finales;
+        etatinitial = q00;
+        etatsnum = vector.size();
+        etatfinal = finales;
         tabtrans = tablaTemp;
 
         System.out.println();

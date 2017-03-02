@@ -7,7 +7,7 @@
  * screen.java
  *
  * Created on 01/11/2010, 11:21:03 AM
- * autores: Pablo Aguilar, Lenin Gordillo, Angel Valdez, Carlos Vivanco
+ * autores: EL Mahiri Nabil
  */
 package afntoafdd.view;
 
@@ -17,35 +17,35 @@ import java.util.TreeSet;
 
 /**
  *
- * @author Fabricio
+ * @author EL Mahiri Nabil
  */
 public class screen extends javax.swing.JFrame {
 
-    /** Creates new form pantalla */
+    /** Creates new form view */
     public screen() {
         z.setNombre("automate");
 
-        Integer numEstados = Integer.parseInt(javax.swing.JOptionPane.showInputDialog("Entrez le nombre d'états"));
-        z.setnumEstados(numEstados);
-        z.setEstadoInicial(0);
+        Integer Etatsnum = Integer.parseInt(javax.swing.JOptionPane.showInputDialog("Entrez le nombre d'états"));
+        z.setEtatsnum(Etatsnum);
+        z.setEtatInitial(0);
 
 
         int estFinales = Integer.parseInt(javax.swing.JOptionPane.showInputDialog("Entrez le nombre d'états finaux"));
         for (int i = 0; i < estFinales; i++) {
-            int estadoFinal = Integer.parseInt(javax.swing.JOptionPane.showInputDialog("Entrez état final"));
-            z.addEstadoFinal(estadoFinal);
+            int etatFinal = Integer.parseInt(javax.swing.JOptionPane.showInputDialog("Entrez état final"));
+            z.addEtatFinal(etatFinal);
         }
 
         int alf = Integer.parseInt(javax.swing.JOptionPane.showInputDialog("Entrez le nombre de lettres de l'alphabet"));
         for (int i = 0; i < alf; i++) {
-            z.addLetraAlfabeto(javax.swing.JOptionPane.showInputDialog("Entrez lettre"));
+            z.addLettreAlphabet(javax.swing.JOptionPane.showInputDialog("Entrez lettre"));
         }
 
         initComponents();
 
-        this.txtNumEstados.setText(numEstados.toString());
-        this.txtestFinales.setText(z.getestadoFinal().toString());
-        this.txtAlfabeto.setText(z.getAlfabeto().toString());
+        this.txtNumEstados.setText(Etatsnum.toString());
+        this.txtestFinales.setText(z.getetatFinal().toString());
+        this.txtAlfabeto.setText(z.getAlphabet().toString());
 
 
 
@@ -287,56 +287,56 @@ public class screen extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        trans = new Transformer().minimizar(z);
-        tabla2();
-        this.txtNumEstados1.setText(String.valueOf(trans.getnumEstados()));
-        this.txtAlfabeto1.setText(trans.getAlfabeto().toString());
-        this.txtestFinales1.setText(trans.getestadoFinal().toString());
+        trans = new Transformer().minimiser(z);
+        table2();
+        this.txtNumEstados1.setText(String.valueOf(trans.getEtatsnum()));
+        this.txtAlfabeto1.setText(trans.getAlphabet().toString());
+        this.txtestFinales1.setText(trans.getetatFinal().toString());
     }//GEN-LAST:event_jButton1ActionPerformed
-    public void tabla1() {
-        tabla1 = "\t" + z.getAlfabeto().toString() + "\n";
+    public void table1() {
+        table1 = "\t" + z.getAlphabet().toString() + "\n";
 
-        for (int i = 0; i < z.getTablaTransiciones().length; i++) {
-            for (int j = 0; j < z.getTablaTransiciones()[i].length; j++) {
+        for (int i = 0; i < z.getTableTransitions().length; i++) {
+            for (int j = 0; j < z.getTableTransitions()[i].length; j++) {
                 if (j == 0) {
-                    tabla1 = tabla1 + i + "\t" + (z.getTablaTransiciones()[i][j].toString());
+                    table1 = table1 + i + "\t" + (z.getTableTransitions()[i][j].toString());
                 } else {
 
-                    tabla1 = tabla1 + (z.getTablaTransiciones()[i][j].toString());
+                    table1 = table1 + (z.getTableTransitions()[i][j].toString());
                 }
             }
-            tabla1 = tabla1 + "\n";
+            table1 = table1 + "\n";
         }
-        this.jTextArea1.setText(tabla1);
+        this.jTextArea1.setText(table1);
     }
 
-    public void tabla2() {
-        tabla2 = "\t" + trans.getAlfabeto().toString() + "\n";
+    public void table2() {
+        table2 = "\t" + trans.getAlphabet().toString() + "\n";
         TreeSet<Integer> table = new TreeSet<Integer>();
         table.add(0);
 
-        for (int i = 0; i < trans.getTablaTransiciones().length; i++) {
-            for (int j = 0; j < trans.getTablaTransiciones()[i].length; j++) {
-                if (trans.getTablaTransiciones()[i][j].isEmpty()) {
-                    trans.getTablaTransiciones()[i][j] = table;
+        for (int i = 0; i < trans.getTableTransitions().length; i++) {
+            for (int j = 0; j < trans.getTableTransitions()[i].length; j++) {
+                if (trans.getTableTransitions()[i][j].isEmpty()) {
+                    trans.getTableTransitions()[i][j] = table;
                 }
             }
         }
 
 
 
-        for (int i = 0; i < trans.getTablaTransiciones().length; i++) {
-            for (int j = 0; j < trans.getTablaTransiciones()[i].length; j++) {
+        for (int i = 0; i < trans.getTableTransitions().length; i++) {
+            for (int j = 0; j < trans.getTableTransitions()[i].length; j++) {
                 if (j == 0) {
-                    tabla2 = tabla2 + i + "\t" + (trans.getTablaTransiciones()[i][j].toString());
+                    table2 = table2 + i + "\t" + (trans.getTableTransitions()[i][j].toString());
                 } else {
 
-                    tabla2 = tabla2 + (trans.getTablaTransiciones()[i][j].toString());
+                    table2 = table2 + (trans.getTableTransitions()[i][j].toString());
                 }
             }
-            tabla2 = tabla2 + "\n";
+            table2 = table2 + "\n";
         }
-        this.jTextArea2.setText(tabla2);
+        this.jTextArea2.setText(table2);
     }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -344,7 +344,7 @@ public class screen extends javax.swing.JFrame {
         String transi = javax.swing.JOptionPane.showInputDialog("Entrez transition");
         int ef = Integer.parseInt(javax.swing.JOptionPane.showInputDialog("Entrez état final"));
         z.addTransicion(ei, transi, ef);
-        tabla1();
+        table1();
 
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -393,7 +393,7 @@ public class screen extends javax.swing.JFrame {
     private javax.swing.JLabel txtestFinales1;
     // End of variables declaration//GEN-END:variables
     public static Automaton z = new Automaton();
-    String tabla1 = "";
+    String table1 = "";
     public Automaton trans = new Automaton();
-    String tabla2 = "";
+    String table2 = "";
 }
